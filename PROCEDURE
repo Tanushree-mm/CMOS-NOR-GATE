@@ -1,0 +1,119 @@
+
+#### **Step 1: Create New Library**
+
+1. Open Virtuoso → `File → New → Library`.
+2. Name the library (e.g., `NOR_Lab2`) and attach to technology (e.g., `gpdk180`).
+
+---
+
+#### **Step 2: Create New Cell View**
+
+1. In Library Manager → Select your new library.
+2. Go to `File → New → Cell View`.
+3. Name the cell (e.g., `NOR2X1`) and choose:
+
+   * **Tool**: `Virtuoso Schematic Editor`
+   * **View Name**: `schematic`
+
+---
+
+#### **Step 3: Schematic Capture**
+
+1. **Instantiate NMOS and PMOS transistors** using:
+
+   * Library: `gpdk180`
+   * NMOS: Width = 1.7 µm, Length = 180 nm
+   * PMOS: Width = 1.275 µm, Length = 180 nm
+2. Create a 2-input CMOS NOR Gate topology (parallel PMOS, series NMOS).
+3. Add input pins (`A`, `B`), output pin (`Y`), `VDD`, and `GND`.
+
+---
+
+#### **Step 4: Check & Save**
+
+* Use `Design → Check and Save` to ensure no errors.
+
+---
+
+#### **Step 5: Create Symbol**
+
+1. From schematic window → `Create → Cellview → From Cellview`.
+2. Configure pin positions (Left: A, B; Right: Y) and OK.
+3. Customize the symbol if needed → save.
+
+---
+
+#### **Step 6: Testbench Setup**
+
+1. Create a new cell for simulation (e.g., `NOR2X1_testbench`).
+2. Add the **NOR gate symbol**.
+3. Add:
+
+   * Two input voltage sources (`vpulse`) from `analogLib`:
+
+     * `Voltage1 = 0`, `Voltage2 = 1.8V`
+     * `Rise/Fall = 1 ps`, `Pulse Width = 10 ns`, `Period = 20 ns`
+   * Connect both `A` and `B` to two independent `vpulse` sources.
+   * Connect a load capacitor (100 fF) at the output.
+   * Add `VDD = 1.8V` and `GND`.
+
+---
+
+#### **Step 7: Launch ADE L**
+
+* Go to `Launch → ADE L`.
+
+---
+
+#### **Step 8: Stimuli Setup**
+
+1. In ADE L → `Setup → Stimuli`
+2. For each input (`A`, `B`):
+
+   * Enable
+   * Function: `bit`
+   * One Value: `1.8V`, Zero Value: `0`
+   * Pattern: `11001001` (to cover all combinations)
+   * Rise/Fall time: 1 ps, Period: 20 ns
+   * Apply and OK
+
+---
+
+#### **Step 9: Select Simulator**
+
+* In ADE L → `Setup → Simulator/Directory/Host`
+* Select **Spectre**
+
+---
+
+#### **Step 10: Add Model Library**
+
+* `Setup → Model Libraries`
+* Add `.scs` file corresponding to gpdk180 technology
+* Select process corner (e.g., `tt`)
+
+---
+
+#### **Step 11: Choose Analysis**
+
+* `Analyses → Choose → Transient`
+
+  * Stop Time: `100 ns`
+  * Accuracy: Moderate → Apply → OK
+
+---
+
+#### **Step 12: Set Outputs**
+
+* `Outputs → Setup → From Design`
+* Click `IN_A`, `IN_B`, and `OUT`
+* Add all to outputs → OK
+
+---
+
+#### **Step 13: Run Simulation**
+
+* `Simulation → Netlist and Run`
+* Results shown in Virtuoso Visualization window.
+
+
